@@ -21,9 +21,9 @@ if(isset($_FILES['foto'])) {
     //print_r($_FILES['foto']);
     $foto = $_FILES['foto'];
 
-    $perfCont = new perfilController();
+    $perfCont = new PerfilController();
     $erros = $perfCont->atualizar($foto);
-    if($msgErro){
+    if($erros){
         $msgErro = implode("<br>", $erros);
     }
 }
