@@ -13,6 +13,12 @@ if(!$usuario) {
     exit;
 }
 
+//carregar mensagem de sucesso de acordo com o parâmetro GET msg
+$msgSucesso = "";
+if(isset($_GET['msg']) && $_GET['msg'] == 1){
+    $msgSucesso = "Foto de perfil atualizado com sucesso.";
+}
+
 $msgErro = "";
 
 //Receber os dados do formulário
@@ -22,9 +28,11 @@ if(isset($_FILES['foto'])) {
     $foto = $_FILES['foto'];
 
     $perfCont = new PerfilController();
-    $erros = $perfCont->atualizar($foto);
+    $erros = $perfCont->atualizar($usuario, $foto);
     if($erros){
         $msgErro = implode("<br>", $erros);
+    } else{
+        header("location: " . URL_BASE . "/view/perfil/perfil.php?msg=1");
     }
 }
 
@@ -59,12 +67,20 @@ include_once(__DIR__ . "/../include/menu.php");
         <?php endif; ?>
     </div>
 
+    <div class="col-6 mb-2 mt-3">
+            <?php if($msgSucesso): ?>
+                <div class="alert alert-success">
+                    <?= $msgSucesso ?>
+                </div>
+        <?php endif; ?>
+    </div>
+
 </div>
     
 <div class="row mt-5">
     
     <div class="col-6">
-        <form action="" method="POST"
+        <form action="perfil.php" method="POST"
             enctype="multipart/form-data" >
 
             <div>
