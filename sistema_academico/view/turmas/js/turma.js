@@ -1,5 +1,6 @@
 const selCurso = document.querySelector("#selCurso");
 const selDisc = document.querySelector("#selDisciplina");
+const divErro = document.getElementById("divMsgErro");
 
 const URL_BASE = document.querySelector("#confUrlBase").dataset.urlBase;
 //console.log(URL_BASE);
@@ -72,6 +73,12 @@ function adicionarOptionDisciplina(disciplina) {
     option.value = disciplina.id;
     option.innerHTML = disciplina.codigo + " - " + disciplina.nome;
 
+    //Marcar o option que já estava selecionado
+    const idSelecionado = selDisc.getAttribute("idSelecionado");
+
+    if(idSelecionado == disciplina.id)
+        option.selected = true;
+    
     selDisc.appendChild(option);
 }
 
@@ -93,7 +100,16 @@ function salvarTurma(){
     const xhttp = new XMLHttpRequest();
     xhttp.open("POST", URL_BASE + "/api/turmas_salvar.php");
     xhttp.onload = function(){
-        console.log(xhttp.responseText);
+        //console.log(xhttp.responseText);
+        const erros = xhttp.responseText;
+        if(erros){
+            //Exibir erros
+            divErro.innerHTML = erros;
+            divErro.style.display = "block";
+        } else{
+            //Salvou a turma, redicionar 
+            window.location = "listar.php";
+        }
     }
     xhttp.send(dados);
 
